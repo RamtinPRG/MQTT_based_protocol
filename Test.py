@@ -7,14 +7,14 @@ import sys
 logging.basicConfig(level=logging.info)
 
 brokerAddr = "mqtt.eclipseprojects.io"
-DataManager.Add(DataManager, brokerAddr, Buffers.B_BrokerAddrress)
+DataManager.Add(brokerAddr, Buffers.B_BrokerAddrress)
 
 clientID = "Client" + str(time.time()) + str(uniform(0.0, 10.0))
-DataManager.Add(DataManager, clientID, Buffers.B_ClientID)
+DataManager.Add(clientID, Buffers.B_ClientID)
 client = mqtt.Client(clientID, False)
 
-DataManager.CheckoutBuffer(DataManager, Buffers.B_ClientID)
-DataManager.CheckoutBuffer(DataManager, Buffers.B_BrokerAddrress)
+DataManager.CheckoutBuffer(Buffers.B_ClientID)
+DataManager.CheckoutBuffer(Buffers.B_BrokerAddrress)
 
 # call back binding
 client.on_log = CallBacks.on_log
@@ -24,7 +24,7 @@ client.on_publish = CallBacks.on_publish
 client.on_subscribe = CallBacks.on_subscribe
 client.on_message = CallBacks.on_message
 
-SetFlags.Connection( client)
+SetFlags.Connection(client)
 QOS, isRetain = SetFlags.Publish(PatientStatus.PS_Emergency)
 logging.info("Connecting to Broker...")
 client.connect(brokerAddr)
@@ -40,7 +40,7 @@ if client.bad_connection_flag:
     sys.exit()
 
 topic = "BloodPressure"
-DataManager.Add(DataManager, topic, Buffers.B_Topic)
+DataManager.Add(topic, Buffers.B_Topic)
 msg = uniform(0, 100)
 logging.info("Message: " + str(msg))
 client.publish(topic, str(msg), QOS, isRetain)
