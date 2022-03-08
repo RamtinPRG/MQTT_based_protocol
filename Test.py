@@ -25,7 +25,7 @@ client.on_subscribe = CallBacks.on_subscribe
 client.on_message = CallBacks.on_message
 
 SetFlags.Connection(client)
-QOS, isRetain = SetFlags.Publish(PatientStatus.PS_Emergency)
+QoS, isRetain = SetFlags.Publish(PatientStatus.PS_Emergency)
 logging.info("Connecting to Broker...")
 client.connect(brokerAddr)
 
@@ -43,10 +43,10 @@ topic = "BloodPressure"
 DataManager.Add(topic, Buffers.B_Topic)
 msg = uniform(0, 100)
 logging.info("Message: " + str(msg))
-client.publish(topic, str(msg), QOS, isRetain)
+client.publish(topic, str(msg), QoS, isRetain)
 time.sleep(3)
 
-client.subscribe(topic, QOS)
+client.subscribe(topic, QoS)
 time.sleep(3)
 
 client.disconnect()
