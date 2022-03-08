@@ -17,7 +17,7 @@ class Buffers(Enum):
     B_Topic = 3
 
 
-class DataManager():
+class DataManager:
     brokerAddr = []
     clientIDs = []
     clientAddrs = []
@@ -49,9 +49,8 @@ class DataManager():
     @classmethod
     def CheckoutBuffer(cls, Buffer):
         buf = cls.GetBufferAt(Buffer)
-        for i in buf:
-            print(i, end=', ')
-        print()
+        print(', '.join(buf))
+
 
 # 0: Connection successful
 # 1: Connection refused – incorrect protocol version
@@ -61,8 +60,8 @@ class DataManager():
 # 5: Connection refused – not authorised
 # 6-255: Currently unused.
 
-
-class CallBacks():
+class CallBacks:
+    @staticmethod
     def on_connect(client, userdate, flags, rc):
         if rc == 0:
             client.connected_flag = True
@@ -86,6 +85,7 @@ class CallBacks():
             client.bad_connection_flag = True
             logging.info("Currently unused; Return code: ", str(rc))
 
+    @staticmethod
     def on_disconnect(client, userdata, rc):
         if rc == 0:
             logging.info("Disconected gracefully")
@@ -94,29 +94,35 @@ class CallBacks():
         client.connected_flag = False
         client.disconnect_flag = True
 
+    @staticmethod
     def on_publish(client, userdata, mid):
         logging.info("on_publish: mid: " + str(mid))
 
+    @staticmethod
     def on_subscribe(client, userdata, mid, granted_qos):
         logging.info("on_subscribe: mid: " + str(mid))
         logging.info("on_subscribe: granted_qos: " + str(granted_qos))
 
+    @staticmethod
     def on_message(client, userdate, message):
         DataManager.q.put(message.topic + ": ", message.payload.decode("utf-8"))
         logging.info("message: " + message.topic + '> ' + message.payload.decode("utf-8"))
 
+    @staticmethod
     def on_log(client, userdata, level, buf):
         logging.info("on_log: " + buf)
 
 
 class SetFlags:
+    @staticmethod
     def Connection(client):
         client.connected_flag = False
         client.bad_connection_flag = False
         client.disconnect_flag = False
 
+    @staticmethod
     def Publish(patientStatus):
         if patientStatus == PatientStatus.PS_Emergency:
-            return (1, True)      # TODO: handle the message duplication on the server-side
+            return 1, True      # TODO: handle the message duplication on the server-side
         elif patientStatus == PatientStatus.PS_Normal:
-            return (0, False)
+            return 0, False
