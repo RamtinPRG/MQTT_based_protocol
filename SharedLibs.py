@@ -90,27 +90,26 @@ class CallBacks:
         if rc == 0:
             logging.info("Disconected gracefully")
         else:
-            logging.info("Disconnected - Return code: " + str(rc))
+            logging.info(f"Disconnected - Return code: {rc}")
         client.connected_flag = False
         client.disconnect_flag = True
 
     @staticmethod
     def on_publish(client, userdata, mid):
-        logging.info("on_publish: mid: " + str(mid))
+        logging.info(f"on_publish: mid: {mid}")
 
     @staticmethod
     def on_subscribe(client, userdata, mid, granted_qos):
-        logging.info("on_subscribe: mid: " + str(mid))
-        logging.info("on_subscribe: granted_qos: " + str(granted_qos))
+        logging.info(f"on_subscribe: mid: {mid}, granted_qos: {granted_qos}")
 
     @staticmethod
     def on_message(client, userdate, message):
-        DataManager.q.put(message.topic + ": ", message.payload.decode("utf-8"))
-        logging.info("message: " + message.topic + '> ' + message.payload.decode("utf-8"))
+        DataManager.q.put(f"{message.topic}: {message.payload.decode('utf-8')}")
+        logging.info(f"message: {message.topic}> {message.payload.decode('utf-8')}")
 
     @staticmethod
     def on_log(client, userdata, level, buf):
-        logging.info("on_log: " + buf)
+        logging.info(f"on_log: {buf}")
 
 
 class SetFlags:
