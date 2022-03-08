@@ -27,7 +27,7 @@ client.on_message = CallBacks.on_message
 SetFlags.Connection(client)
 QoS, isRetain = SetFlags.Publish(PatientStatus.PS_Emergency)
 logging.info("Connecting to Broker...")
-client.connect(brokerAddr)
+client.connect(brokerAddr, 1883)
 
 client.loop_start()
 
